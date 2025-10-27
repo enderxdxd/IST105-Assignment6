@@ -1,0 +1,34 @@
+{% extends "bitwise/base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Enter five numbers</h2>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+{% if results %}
+  <div class="card">
+    <h3>Results</h3>
+
+    {% if results.has_negatives %}
+      <p class="warn">Warning: Some inputs are negative: <strong>{{ results.negative_fields|join:", " }}</strong></p>
+    {% else %}
+      <p class="ok">All inputs are non-negative.</p>
+    {% endif %}
+
+    <p><strong>Original Values:</strong> {{ results.original }}</p>
+    <p><strong>Sorted Values (greater than 10):</strong> {{ results.over_ten_sorted }}</p>
+    <p><strong>Average:</strong> {{ results.average|floatformat:2 }} ( > 50? <strong>{{ results.avg_gt_50 }}</strong> )</p>
+    <p><strong>Count of positive numbers:</strong> {{ results.positive_count }} (bitwise parity: <strong>{{ results.positive_count_parity }}</strong>)</p>
+
+    {% if saved %}
+      <p class="ok">Saved to MongoDB successfully.</p>
+    {% elif saved is not none %}
+      <p class="warn">Could not save to MongoDB: <code>{{ save_error }}</code></p>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "bitwise/base.html" %}
+{% block content %}
+  <div class="card">
+    <h2>Saved Entries</h2>
+    {% if error %}
+      <p class="warn">Error fetching entries: <code>{{ error }}</code></p>
+    {% endif %}
+    {% if docs %}
+      <ol>
+        {% for d in docs %}
+          <li>
+            <div class="card">
+              <p><strong>When:</strong> {{ d.timestamp }}</p>
+              <p><strong>Inputs:</strong> {{ d.inputs }}</p>
+              <p><strong>Original:</strong> {{ d.results.original }}</p>
+              <p><strong>Over 10 Sorted:</strong> {{ d.results.over_ten_sorted }}</p>
+              <p><strong>Average:</strong> {{ d.results.average|floatformat:2 }} ( > 50? {{ d.results.avg_gt_50 }} )</p>
+              <p><strong>Positives:</strong> {{ d.results.positive_count }} ({{ d.results.positive_count_parity }})</p>
+            </div>
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <p>No entries saved yet.</p>
+    {% endif %}
+  </div>
+{% endblock %}
